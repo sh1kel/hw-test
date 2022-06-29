@@ -16,23 +16,24 @@ func Unpack(packedString string) (string, error) {
 	outString := strings.Builder{}
 	var currentSymbol rune
 	var previousSymbol rune
-	var repeat int
-	strLen := len([]rune(packedString))
+	var repeat, strLen int
 	var err error
 
-	for i, r := range packedString {
-		// fmt.Printf("%d Processing %c\n", i, r)
-		if i == 0 {
-			switch {
-			case unicode.IsDigit(r):
-				return "", ErrInvalidString
-			case r == ' ':
-				return "", ErrFirstSpace
-			case unicode.IsLetter(r):
-				currentSymbol = r
-			}
-		}
+	runeString := []rune(packedString)
+	if strLen = len(runeString); strLen == 0 {
+		return "", nil
+	}
 
+	switch {
+	case unicode.IsDigit(runeString[0]):
+		return "", ErrInvalidString
+	case runeString[0] == ' ':
+		return "", ErrFirstSpace
+	case unicode.IsLetter(runeString[0]):
+		currentSymbol = runeString[0]
+	}
+
+	for i, r := range packedString {
 		if i > 0 {
 			previousSymbol = currentSymbol
 			currentSymbol = r
@@ -44,28 +45,22 @@ func Unpack(packedString string) (string, error) {
 				if err != nil {
 					return "", err
 				}
-				// fmt.Printf("Repeat %c %d times\n", previousSymbol, repeat)
 				for i := 1; i <= repeat; i++ {
-					// fmt.Printf("%d Save %c\n", i, previousSymbol)
 					outString.WriteRune(previousSymbol)
 				}
 			case unicode.IsLetter(currentSymbol) && unicode.IsLetter(previousSymbol):
 				// текущий буква, предыдыущий буква
-				// fmt.Printf("%d Save %c\n", i, previousSymbol)
 				outString.WriteRune(previousSymbol)
 				if i == strLen-1 {
-					// fmt.Printf("%d Save %c\n", i, currentSymbol)
 					outString.WriteRune(currentSymbol)
 				}
 			case unicode.IsLetter(currentSymbol) && unicode.IsDigit(previousSymbol):
 				// текущий буква, предыдущий - цифра
 				if i == strLen-1 {
-					// fmt.Printf("%d Save %c\n", i, currentSymbol)
 					outString.WriteRune(currentSymbol)
 				}
 			}
 		}
 	}
-	// fmt.Printf("%s => %s\n", packedString, outString.String())
 	return outString.String(), nil
 }
