@@ -45,9 +45,7 @@ func Unpack(packedString string) (string, error) {
 				if err != nil {
 					return "", err
 				}
-				for i := 1; i <= repeat; i++ {
-					outString.WriteRune(previousSymbol)
-				}
+				outString.WriteString(strings.Repeat(string(previousSymbol), repeat))
 			case unicode.IsLetter(currentSymbol) && unicode.IsLetter(previousSymbol):
 				// текущий буква, предыдыущий буква
 				outString.WriteRune(previousSymbol)
