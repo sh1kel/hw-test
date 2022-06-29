@@ -22,7 +22,6 @@ func TestUnpack(t *testing.T) {
 		// {input: `qwe\\5`, expected: `qwe\\\\\`},
 		// {input: `qwe\\\3`, expected: `qwe\3`},
 	}
-
 	for _, tc := range tests {
 		tc := tc
 		t.Run(tc.input, func(t *testing.T) {
@@ -40,6 +39,17 @@ func TestUnpackInvalidString(t *testing.T) {
 		t.Run(tc, func(t *testing.T) {
 			_, err := Unpack(tc)
 			require.Truef(t, errors.Is(err, ErrInvalidString), "actual error %q", err)
+		})
+	}
+}
+
+func TestFirstSpace(t *testing.T) {
+	invalidStrings := []string{" "}
+	for _, tc := range invalidStrings {
+		tc := tc
+		t.Run(tc, func(t *testing.T) {
+			_, err := Unpack(tc)
+			require.Truef(t, errors.Is(err, ErrFirstSpace), "actual error %q", err)
 		})
 	}
 }
