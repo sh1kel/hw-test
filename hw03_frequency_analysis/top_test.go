@@ -57,11 +57,14 @@ func TestClearString(t *testing.T) {
 	t.Run("non-letter string", func(t *testing.T) {
 		require.Equal(t, []interface{}{"test", nil}, toSlice(clearString("#test!*")))
 	})
-	t.Run("string with minus in middle", func(t *testing.T) {
+	t.Run("string with minus in the middle", func(t *testing.T) {
 		require.Equal(t, []interface{}{"test-test", nil}, toSlice(clearString("test-test")))
 	})
 	t.Run("string with minus in the end", func(t *testing.T) {
 		require.Equal(t, []interface{}{"test", nil}, toSlice(clearString("test-")))
+	})
+	t.Run("string with minus in the beginning", func(t *testing.T) {
+		require.Equal(t, []interface{}{"test", nil}, toSlice(clearString("-test")))
 	})
 }
 

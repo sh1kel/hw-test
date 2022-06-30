@@ -25,7 +25,7 @@ func clearString(s string) (string, error) {
 		if unicode.IsLetter(a) {
 			resultS.WriteRune(a)
 		}
-		if i != len(clearS)-1 && a == '-' {
+		if i != len(clearS)-1 && i != 0 && a == '-' {
 			resultS.WriteRune(a)
 		}
 	}
