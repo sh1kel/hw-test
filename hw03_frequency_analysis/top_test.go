@@ -7,7 +7,7 @@ import (
 )
 
 // Change to true if needed.
-var taskWithAsteriskIsCompleted = false
+var taskWithAsteriskIsCompleted = true
 
 var text = `Как видите, он  спускается  по  лестнице  вслед  за  своим
 	другом   Кристофером   Робином,   головой   вниз,  пересчитывая
@@ -42,6 +42,31 @@ var text = `Как видите, он  спускается  по  лестни�
 	иногда,  особенно  когда  папа  дома,  он больше любит тихонько
 	посидеть у огня и послушать какую-нибудь интересную сказку.
 		В этот вечер...`
+
+func toSlice(a ...interface{}) []interface{} {
+	return a
+}
+
+func TestClearString(t *testing.T) {
+	t.Run("minus parameter", func(t *testing.T) {
+		require.Equal(t, []interface{}{"", ErrFirstSpace}, toSlice(clearString("-")))
+	})
+	t.Run("capitalized string", func(t *testing.T) {
+		require.Equal(t, []interface{}{"test", nil}, toSlice(clearString("TEST")))
+	})
+	t.Run("non-letter string", func(t *testing.T) {
+		require.Equal(t, []interface{}{"test", nil}, toSlice(clearString("#test!*")))
+	})
+	t.Run("string with minus in the middle", func(t *testing.T) {
+		require.Equal(t, []interface{}{"test-test", nil}, toSlice(clearString("test-test")))
+	})
+	t.Run("string with minus in the end", func(t *testing.T) {
+		require.Equal(t, []interface{}{"test", nil}, toSlice(clearString("test-")))
+	})
+	t.Run("string with minus in the beginning", func(t *testing.T) {
+		require.Equal(t, []interface{}{"test", nil}, toSlice(clearString("-test")))
+	})
+}
 
 func TestTop10(t *testing.T) {
 	t.Run("no words in empty string", func(t *testing.T) {
