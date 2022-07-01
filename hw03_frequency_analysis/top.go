@@ -34,9 +34,7 @@ func clearString(s string) (string, error) {
 
 func Top10(text string) []string {
 	frequencyMap := make(map[string]int)
-	frequencySlice := make([]frequencyStruct, 0, 100)
 	resultSlice := make([]string, 0, 10)
-	var iter int
 	stringSlice := strings.Fields(text)
 	for _, val := range stringSlice {
 		clean, err := clearString(val)
@@ -45,6 +43,7 @@ func Top10(text string) []string {
 		}
 		frequencyMap[clean]++
 	}
+	frequencySlice := make([]frequencyStruct, 0, len(frequencyMap))
 	for key, val := range frequencyMap {
 		frequencySlice = append(frequencySlice, frequencyStruct{word: key, frq: val})
 	}
@@ -60,12 +59,11 @@ func Top10(text string) []string {
 		}
 		return false
 	})
-	for _, val := range frequencySlice {
-		if iter == 10 {
+	for i, val := range frequencySlice {
+		if i == 10 {
 			break
 		}
 		resultSlice = append(resultSlice, val.word)
-		iter++
 	}
 	return resultSlice
 }
